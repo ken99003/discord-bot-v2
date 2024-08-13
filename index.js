@@ -1,5 +1,6 @@
 // 引入 Discord.js 模組
 const { Client, GatewayIntentBits } = require('discord.js');
+const keep_alive=require('./keep_alive.js')
 require('dotenv').config();
 
 // 創建一個新的 Discord 客戶端實例
