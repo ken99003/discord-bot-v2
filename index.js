@@ -18,6 +18,9 @@ let reminders = {};
 client.on('messageCreate', message => {
 
     // 測試指令
+    if (message.content === '!ping') {
+      message.channel.send('pong!');
+    }
     if (message.content === '!niha') {
         message.channel.send('niha!\n');
         message.channel.send('機器人已啟動，請不要挑戰機器人的極限，謝謝');
@@ -53,30 +56,30 @@ client.on('messageCreate', message => {
               const roleId = '1270624318212276295'; 
               const targetChannel = message.guild.channels.cache.get(channelId);
 
-              targetChannel.send(`<@&${roleId}> 提醒 ${reminderId}: ${reminderMessage}`)
+              targetChannel.send(`<@&${roleId}> 提醒${reminderId}: ${reminderMessage}`)
                 .then(sentMessage => {
                   setTimeout(() => {
                       sentMessage.delete().catch(console.error);
-                  }, 30000);
+                  }, 60000);
                 });
 
                 // 設置持續的提醒
                 const intervalId = setInterval(() => {
-                    targetChannel.send(`<@&${roleId}> 提醒 ${reminderId}: ${reminderMessage}`)
+                    targetChannel.send(`<@&${roleId}> 提醒${reminderId}: ${reminderMessage}`)
                     .then(sentMessage => {
                       setTimeout(() => {
                           sentMessage.delete().catch(console.error);
-                      }, 30000);
+                      }, 60000);
                     });
                 }, interval);
 
                 // 保存提醒信息
-                reminders[reminderId] = { intervalId };
+                reminders[reminderId] = { intervalId , reminderMessage};
 
             }, initialDelay);
 
             // 保存初始提醒
-            reminders[reminderId] = { initialTimeout };
+            reminders[reminderId] = { initialTimeout , reminderMessage };
 
             message.channel.send(`已設置提醒編號 ${reminderId}: ${reminderMessage}`);
           } else{
@@ -113,6 +116,41 @@ client.on('messageCreate', message => {
   }
   //
 
+
+  //clear
+  if(message.content === '!clear'){
+    let count = 1;
+    for(count;count<20;count++){
+      if (reminders[count]) {
+        // 清除對應的提醒
+        clearTimeout(reminders[count].initialTimeout);
+        clearInterval(reminders[count].intervalId);
+        // 刪除提醒記錄
+        delete reminders[count];
+
+        message.channel.send(`已刪除提醒編號 ${count}`);
+      }
+    }
+    message.channel.send('已全部刪除');
+  }
+  //
+
+  //list
+  if(message.content === '!list'){
+    let count = 1;
+    let check = 0;
+    message.channel.send(`目前編號\n`)
+    for(count;count<20;count++){
+      if (reminders[count]) {
+        check=1;
+        message.channel.send(`編號${count}:${reminders[count].reminderMessage}`);
+
+      }
+    }
+    if(check == 0){
+      message.channel.send(`無`);
+    }
+  }
 });
 // 登入 Discord
 client.login(process.env.TOKEN);
