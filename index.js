@@ -19,14 +19,14 @@ client.on('messageCreate', message => {
 
     // 測試指令
     if (message.content === '!ping') {
-      message.channel.send('pong!');
-    }
-    if (message.content === '!niha') {
-        message.channel.send('niha!\n');
-        message.channel.send('機器人已啟動，請不要挑戰機器人的極限，謝謝');
+      message.channel.send('pong!\n');
+      message.channel.send('機器人已啟動，請不要挑戰機器人的極限，謝謝');
     }
     if (message.content === '!傑森') {
       message.channel.send('sb');
+    }
+    if (message.content === '!蘇蘇') {
+      message.channel.send('大雙6');
     }
     //
 
@@ -151,6 +151,18 @@ client.on('messageCreate', message => {
       message.channel.send(`無`);
     }
   }
+  //
+
+  //老賭狗
+  if(message.content === '!roll'){
+    function getRandom(min,max){
+      return Math.floor(Math.random()*(max-min+1))+min;
+    };
+    let num= getRandom(1,6);
+    message.channel.send(`幸運數字:${num}`);
+  }
+  //
+
 });
 // 登入 Discord
 client.login(process.env.TOKEN);
